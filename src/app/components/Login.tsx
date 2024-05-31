@@ -1,12 +1,14 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Center, Text } from '@chakra-ui/react';
+import { Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Center, Spinner } from '@chakra-ui/react';
 import QRCode from 'qrcode.react';
-import io from 'socket.io-client';
 import { useAuth } from '../contexts/AuthProvider';
+import { useRouter } from 'next/navigation';
 
 const Login = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
-    const [messages, setMessages] = useState([]);
+    const { verifyUser } = useAuth();
+    const router = useRouter();
+    const [message, setMessage] = useState(null);
     const [jwtChallenge, setJwtChallenge] = useState(null);
     const [jwtChallengeUrl, setJwtChallengeUrl] = useState('jwtChallengeUrl');
 
@@ -40,7 +42,7 @@ const Login = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) =>
 
                     if (response.ok) {
                         const result = await response.json();
-                        console.log(result.message);
+                        setMessage(result);
                     } else {
                         console.error('Error connecting to WebSocket:', response.statusText);
                     }
@@ -51,6 +53,16 @@ const Login = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) =>
         }
     }, [jwtChallenge]);
 
+    useEffect(() => {
+        if (message) {
+            const handleVerify = () => {
+                verifyUser(message);
+                router.push('/dashboard');
+            };
+
+            handleVerify();
+        }
+    }, [message]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -62,15 +74,22 @@ const Login = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) =>
                 <ModalCloseButton />
                 <ModalBody>
                     <Center w="100%">
+                    {jwtChallenge ? (
                         <QRCode size={256} value={jwtChallengeUrl} />
-                        {/* {messages.map((message, index) => (
-                            <Text key={index}>{message}</Text>
-                        ))} */}
+                    ) : (
+                        <Spinner
+                            thickness='4px'
+                            speed='0.65s'
+                            emptyColor='gray.200'
+                            color='blue.500'
+                            size='xl'
+                        />
+                    )}
                     </Center>
                 </ModalBody>
             </ModalContent>
         </Modal>
-);
+    );
 }
 
 export default Login;

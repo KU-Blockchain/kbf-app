@@ -1,7 +1,6 @@
 "use server";
 import { NextResponse } from 'next/server';
-import WebSocket from 'ws';
-import { io } from 'socket.io-client';
+import { io as Client } from 'socket.io-client';
 
 export async function POST(req) {
   const { jwtChallenge } = await req.json();
@@ -14,61 +13,34 @@ export async function POST(req) {
   }
 
   try {
-    // const wsUrl = `${apiBaseUrl}?apiKey=${apiKey}&lockId=${lockId}&jwtChallenge=${jwtChallenge}`;
-    // const ws = new WebSocket(wsUrl);
+    const socket = Client(`${apiBaseUrl}?apiKey=${apiKey}&lockId=${lockId}&jwtChallenge=${jwtChallenge}`);
 
-    // ws.on('open', () => {
-    //   console.log('Connected to WebSocket server');
-    //   const topic = `tokens:${apiKey}:${lockId}:${jwtChallenge}`;
-    //   ws.send(JSON.stringify({ action: 'subscribe', topic }));
+    return new Promise((resolve, reject) => {
+      socket.on('connect', () => {
+        console.log('Connected to the WebSocket server');
+      });
 
-    //   ws.on('message', (message) => {
-    //     const parsedMessage = JSON.parse(message);
-    //     console.log('Received message:', parsedMessage);
+      socket.on(`tokens:${apiKey}:${lockId}:${jwtChallenge}`, (message) => {
+        console.log('Received message from WebSocket server:', message);
+        const clientData = message.presentedCredentials[0].credentialSubject.recipient
+        console.log('Nessage to send to client:', clientData)
 
-    //     // Emit acknowledgment back to the server
-    //     ws.send(JSON.stringify({ action: `acknowledgement-${topic}` }));
-    //   });
-    // });
+        // Close the WebSocket connection
+        socket.disconnect();
 
-    // ws.on('error', (error) => {
-    //   console.error('WebSocket error:', error);
-    // });
+        // Resolve the promise with the message
+        resolve(NextResponse.json(clientData, { status: 200 }));
+      });
 
-    // ws.on('close', () => {
-    //   console.log('WebSocket connection closed');
-    // });
-    const socket = io(apiBaseUrl, {
-      query: { apiKey, lockId, jwtChallenge },
-    });
-    
-    const topic = `tokens:${apiKey}:${lockId}:${jwtChallenge}`;
-    
-    socket.on('connect', () => {
-      console.log(socket);
-      console.log('Connected to the server');
-    });
-    
-    socket.on('connect_error', (error) => {
-      console.error('Connection error:', error);
-    });
-    
-    socket.on('error', (errorMessage) => {
-      console.error('Error from server:', errorMessage);
-    });
-    
-    socket.on(topic, (message) => {
-      console.log('Received message:', message);
-    
-      // Emit acknowledgement of receipt back to the server
-      socket.emit(`acknowledgement-${topic}`);
-    });
-    
-    socket.on('disconnect', () => {
-      console.log('Disconnected from the server');
-    });
+      socket.on('disconnect', () => {
+        console.log('Disconnected from the WebSocket server');
+      });
 
-    return NextResponse.json({ message: 'WebSocket connection established' }, { status: 200 });
+      socket.on('error', (error) => {
+        console.error('WebSocket error:', error);
+        reject(NextResponse.json({ error: 'WebSocket error' }, { status: 500 }));
+      });
+    });
   } catch (error) {
     console.error('Error connecting to WebSocket:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

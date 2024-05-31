@@ -19,6 +19,7 @@ export async function GET() {
         'X-Heirloom-API-Version': 1,
         'X-Heirloom-Lock-ID': lockId,
       },
+      cache: 'no-store', // Ensure no caching
     });
 
     if (!response.ok) {

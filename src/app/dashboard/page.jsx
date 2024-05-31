@@ -1,13 +1,18 @@
 "use client";
 import React from "react";
-import { Flex } from "@chakra-ui/react";
-import QuickLogin from "../../api/QuickLoginSocket";
-
+import { Flex, Heading, VStack } from "@chakra-ui/react";
+import { useAuth } from "../contexts/AuthProvider";
 
 const Page = () => {
+    const { isVerified, firstName, lastName, email } = useAuth();
     return (
         <Flex>
-            <QuickLogin />
+            <VStack>
+                <Heading>This is the entrance to the world...</Heading>
+                <Heading>{`Is verified: ${isVerified}`}</Heading>
+                <Heading>{`Welcome, ${firstName} ${lastName}!`}</Heading>
+                <Heading>{`Email: ${email}`}</Heading>
+            </VStack>
         </Flex>
     );
 }
