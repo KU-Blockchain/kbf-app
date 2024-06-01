@@ -25,13 +25,13 @@ const theme = extendTheme({
       body: {
         fontSize: "lg", // Now using 'lg' size for body text
         color: props.colorMode === "dark" ? "white" : "gray.800",
-        bg: "linear(to-r, orange.500, pink.500)",
-      },
-    }),
-  },
-  components: {
-    Heading: {
-      baseStyle: {
+        bg: props.colorMode === "dark" ? "black" : "white",
+            },
+          }),
+        },
+        components: {
+          Heading: {
+            baseStyle: {
         fontSize: "xl", // Now using 'xl' for all headings by default
         fontWeight: "900",
       },

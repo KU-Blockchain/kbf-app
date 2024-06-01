@@ -8,12 +8,12 @@ const ProtectedRoute = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isVerified) {
+    if (isVerified) {
       router.push('/');
     }
   }, [isVerified, router]);
 
-  if (!isVerified) {
+  if (isVerified) {
     return null; // could also render a loading spinner
   }
 

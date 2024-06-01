@@ -57,7 +57,7 @@ const Login = ({ isOpen, onClose }) => {
         if (message) {
             const handleVerify = () => {
                 verifyUser(message);
-                router.push('/dashboard');
+                router.push('/portal');
             };
 
             handleVerify();

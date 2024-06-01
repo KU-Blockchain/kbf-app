@@ -15,10 +15,10 @@ export default function Home() {
   }
 
   return (
-    <Flex h="95vh">
+    <Flex h="100vh" bgGradient="linear(to-r, orange.500, pink.500)">
       <Center w="100%">
         <Box>
-          <Heading as="h1" size="2xl">Welcome to KBF Dashboards</Heading>
+          <Heading as="h1" size="2xl">Welcome to KBF Portal</Heading>
           <Text fontSize="xl" mt="4">Get started by logging in with Heirloom</Text>
           <HStack mt="8">
             <Button onClick={openModal} colorScheme="blue">Heirloom Quicklogin</Button>
