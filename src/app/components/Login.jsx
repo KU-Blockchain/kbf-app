@@ -5,7 +5,7 @@ import QRCode from 'qrcode.react';
 import { useAuth } from '../contexts/AuthProvider';
 import { useRouter } from 'next/navigation';
 
-const Login = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+const Login = ({ isOpen, onClose }) => {
     const { verifyUser } = useAuth();
     const router = useRouter();
     const [message, setMessage] = useState(null);

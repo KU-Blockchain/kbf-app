@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { Heading, Box, Flex, Center, Text, HStack, Button } from '@chakra-ui/react';
-import Login from './components/Login';
+import Login from './components/Login.jsx';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
