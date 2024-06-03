@@ -1,7 +1,8 @@
 import React from 'react'
 import './globals.css'
 import { ChakraProvider } from '@chakra-ui/react'
-import { AuthProvider } from './contexts/AuthProvider'
+import { AuthProvider } from './contexts/AuthContext'
+import { MetaMaskProvider } from './contexts/MetaMaskContext'
 import theme from './theme'
 
 export const metadata = {
@@ -19,7 +20,9 @@ export default function RootLayout({
       <body>
         <ChakraProvider theme={theme}>
           <AuthProvider>
+            <MetaMaskProvider>
             {children}
+            </MetaMaskProvider>
           </AuthProvider>
         </ChakraProvider>
       </body>

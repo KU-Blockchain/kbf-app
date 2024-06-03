@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Box, Button, Flex, Text, FormControl, FormLabel, Heading, Input, VStack, Card, CardHeader, CardBody } from "@chakra-ui/react";
-import { useAuth } from "../contexts/AuthProvider";
+import { useAuth } from "../contexts/AuthContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Navbar from "../components/Navbar";
 
@@ -11,7 +11,7 @@ let walletAddresses = {
 
 const Portal = () => {
     const { firstName, lastName, email } = useAuth();
-    const [walletAddress, setWalletAddress] = React.useState("");
+    const [walletAddress, setWalletAddress] = useState("");
 
     const handleWalletAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setWalletAddress(event.target.value);
@@ -28,8 +28,10 @@ const Portal = () => {
             <Navbar />
             <Flex m={6} mx={10}>
                 <VStack>
-                    <Heading>This is the entrance to the world...</Heading>
-                    <Heading>{`Welcome, ${firstName || 'firstName'} ${lastName || 'lastName'}!`}</Heading>
+                    <Box bg="gray">
+                        <Heading>{`Hello, ${firstName || 'firstName'} ${lastName || 'lastName'}!`}</Heading>
+                        <Text>This is the entrance to the world...</Text>
+                    </Box>
                     <Heading>{`Email: ${email || 'email'}`}</Heading>
                     <Box bg="gray">
                         <FormControl isRequired>

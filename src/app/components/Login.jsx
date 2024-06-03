@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Center, Spinner } from '@chakra-ui/react';
 import QRCode from 'qrcode.react';
-import { useAuth } from '../contexts/AuthProvider';
+import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
 const Login = ({ isOpen, onClose }) => {
