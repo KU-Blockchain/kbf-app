@@ -78,6 +78,7 @@ const Login = ({ isOpen, onClose }) => {
                         <QRCode size={256} value={jwtChallengeUrl} />
                     ) : (
                         <Spinner
+                            my={6}
                             thickness='4px'
                             speed='0.65s'
                             emptyColor='gray.200'

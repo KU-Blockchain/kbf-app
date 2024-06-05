@@ -53,3 +53,21 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 38px; /* Corresponds to 'xl' in the theme */
   font-weight: 900;
 }
+
+.my-custom-cursor {
+  animation: blink-cursor 1s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  from, to {
+      opacity: 0;
+  }
+  50% {
+      opacity: 0;
+  }
+}
+
+.my-custom-cursor.hide-cursor {
+  opacity: 0; /* Hide the cursor */
+  animation: none; /* Stop the blinking animation */
+}
