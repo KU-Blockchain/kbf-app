@@ -15,7 +15,8 @@ const Login = ({ isOpen, onClose }) => {
     useEffect(() => {
         if (isOpen) {
             const getJWT = async() => {
-                const response = await fetch('../api/QuickLoginJWT');
+                //const response = await fetch('../api/QuickLoginJWT'); moving to the kbf server to fetch JWT
+                const response = await fetch('http://192.168.86.65:4000/api/QuickLoginJWT');
                 const data = await response.json();
                 setJwtChallenge(data.loginChallenge);
                 setJwtChallengeUrl(data.loginChallengeUrl);
@@ -32,7 +33,14 @@ const Login = ({ isOpen, onClose }) => {
                 if (jwtChallenge) {
                     console.log('Connecting to WebSocket...');
                     console.log('jwtChallenge:', jwtChallenge)
-                    const response = await fetch('../api/QuickLoginSocket', {
+                    // const response = await fetch('../api/QuickLoginSocket', {   moving to the kbf server to get socket data
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //     },
+                    //     body: JSON.stringify({ jwtChallenge: jwtChallenge }),
+                    // });
+                    const response = await fetch('http://192.168.86.65:4000/api/QuickLoginSocket', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

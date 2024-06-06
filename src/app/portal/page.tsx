@@ -29,13 +29,15 @@ const Portal = () => {
     }
 
     useEffect(() => {
-        const checkNFT = async () => {
-            const balance = await checkKBFNFTOwnership();
-            if (balance > 0) {
-                setHasNFT(true);
+        if (isWalletConnected) {
+            const checkNFT = async () => {
+                const balance = await checkKBFNFTOwnership();
+                if (balance > 0) {
+                    setHasNFT(true);
+                }
             }
+            checkNFT();
         }
-        checkNFT();
     }, [checkKBFNFTOwnership]);
     
     const checkMetaMask = () => {
@@ -65,7 +67,7 @@ const Portal = () => {
     return (
         <ProtectedRoute>
             <Navbar />
-            <Flex m={6} mx={10}>
+            <Flex h="auto" m={6} mx={10}>
                 <Box w="40%">
                     <Heading py={4}>{`Hello, ${firstName || 'firstName'}!`}</Heading>
                     <Text fontSize="md">Welcome to the Kansas Blockchain Institute Experimental Decentralized Application (dApp). This application is designed to immerse you into the web3 world through short interactive activities.</Text>
@@ -181,7 +183,7 @@ const Portal = () => {
                     )}
                     </Popover>
                     <Text textAlign="center" fontSize="md">
-                        2. Click the button below to add your KBF NFT to your MetaMask wallet.
+                        2. Find and record the Token ID of your NFT. You&apos;ll need this for step 3.
                     </Text>
                     <Button
                         onClick={openModal}
