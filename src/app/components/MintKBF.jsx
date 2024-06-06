@@ -17,7 +17,7 @@ const MintKBF = forwardRef((props, ref) => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contractAddress = `0x85d92c9729189890a812821e17f15cd84fd417b9`; // NFT contract address
+      const contractAddress = `0x3ab588b04a50a39b192f095fef1eeef39311d98f`; // NFT contract address
       const contract = new ethers.Contract(contractAddress, KansasBlockchainABI.abi, signer);
 
       const metadata = {

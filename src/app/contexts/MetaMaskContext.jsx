@@ -111,7 +111,7 @@ export const MetaMaskProvider = ({ children }) => {
     const checkKBFNFTOwnership = async () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
-        const contractAddress = `0x5CB013C15caf08EE1ef85D37e797b6f7000e6D32`; // NFT contract address
+        const contractAddress = `0x3ab588b04a50a39b192f095fef1eeef39311d98f`; // NFT contract address
         const contract = new ethers.Contract(contractAddress, KansasBlockchainABI.abi, signer);
         
         let balance = 0;
@@ -133,7 +133,7 @@ export const MetaMaskProvider = ({ children }) => {
                 params: {
                     type: 'ERC721',
                     options: {
-                        address: `0x5CB013C15caf08EE1ef85D37e797b6f7000e6D32`,
+                        address: `0x3ab588b04a50a39b192f095fef1eeef39311d98f`,
                         tokenId: tokenId.toString(),
                     },
                 },
