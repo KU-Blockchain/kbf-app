@@ -33,8 +33,8 @@ export const IPFSProvider = ({children}) =>{
 
   async function uploadJSONToIPFS(json) {
     const jsonString = JSON.stringify(json);
-    const jsonData = new FormData();
-    jsonData.append('file', new Blob([jsonString], { type: 'application/json' })); 
+    // const jsonData = new FormData();
+    // jsonData.append('file', new Blob([jsonString], { type: 'application/json' })); 
 
     console.log('Uploading JSON to IPFS...');
     try {
