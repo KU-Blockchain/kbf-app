@@ -18,7 +18,7 @@ const Portal = () => {
     const { isMetaMaskInstalled, isWalletConnected, connectWallet, currentWalletAddress, addPolygonAmoy, checkIsOnChain, checkKBFNFTOwnership, addNFTToMetaMask } = useMetaMask();
     const [ metaMaskChecked, setMetaMaskChecked ] = useState(false);
     const [ hasNFT, setHasNFT] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -33,12 +33,13 @@ const Portal = () => {
             const checkNFT = async () => {
                 const balance = await checkKBFNFTOwnership();
                 if (balance > 0) {
+                    console.log("User has NFT")
                     setHasNFT(true);
                 }
             }
             checkNFT();
         }
-    }, [checkKBFNFTOwnership]);
+    }, [isWalletConnected]);
     
     const checkMetaMask = () => {
         if (isMetaMaskInstalled) {
@@ -49,6 +50,7 @@ const Portal = () => {
     const mintKbfRef = useRef(null);
 
     const handleMint = () => {
+        console.log("Has NFT:", hasNFT)
         if (!hasNFT) {
             if (mintKbfRef.current) {
                 mintKbfRef.current.handleSubmit();
@@ -56,11 +58,11 @@ const Portal = () => {
         }
     };
 
-    const handleConnectWallet = () => {
-        connectWallet();
+    const handleConnectWallet = async () => {
+        await connectWallet();
         if (!checkIsOnChain()) {
             console.log("Not on Polygon chain");
-            addPolygonAmoy();
+            await addPolygonAmoy();
         }
     };
 

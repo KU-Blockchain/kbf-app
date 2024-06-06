@@ -15,6 +15,7 @@ export const MetaMaskProvider = ({ children }) => {
         if (!isMetaMaskInstalled) {
             console.log('In order to use this dApp, you need to install MetaMask')
         } else {
+            console.log('Connecting wallet...')
             const accounts = await window.ethereum.request({ method: 'eth_accounts' });
             if (accounts.length > 0) {
                 const chainId = await window.ethereum.request({ method: 'eth_chainId' });
@@ -33,39 +34,44 @@ export const MetaMaskProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        console.log('Loading Session Variables...');
+        console.log('currentChainId:', sessionStorage.getItem('currentChainId'));
+        console.log('currentWalletAddress:', sessionStorage.getItem('currentWalletAddress'));
+        console.log('isWalletConnected:', sessionStorage.getItem('isWalletConnected'));
+        console.log('isMetaMaskInstalled:', sessionStorage.getItem('isMetaMaskInstalled'));
+        console.log('isWalletConnected fr:', isWalletConnected);
+
         checkMetaMask();
         if (isMetaMaskInstalled) {
-            const accounts = window.ethereum.request({ method: 'eth_accounts' });
+            //const accounts = window.ethereum.request({ method: 'eth_accounts' });
             window.ethereum.on("chainChanged", (chainId) => {
                 console.log('Chain changed to:', chainId);
-                const walletAddress = accounts[0];
-                connectWallet({ address: walletAddress, chainId: chainId });
+                sessionStorage.setItem('currentChainId', chainId);
                 //window.location.reload();
             });
             window.ethereum.on("accountsChanged", (accounts) => {
                 console.log('Accounts changed to:', accounts);
                 setWalletConnected(accounts.length > 0);
+                sessionStorage.setItem('iswalletConnected', accounts.length > 0);
                 if (isWalletConnected) {
                     const walletAddress = accounts[0];
                     setCurrentWalletAddress(walletAddress);
                     sessionStorage.setItem('currentWalletAddress', walletAddress);
                 }
-                sessionStorage.setItem('iswalletConnected', accounts.length > 0);
                 //window.location.reload();
             });
         }
 
         // load the verification status and user details from session storage when the component mounts
-        const storedIsWalletConnected = sessionStorage.getItem('isWalletConnected') === 'true';
-        //setWalletConnected(storedIsWalletConnected);
+        sessionStorage.setItem('isWalletConnected', isWalletConnected);
         const storedCurrentChainId = sessionStorage.getItem('currentChainId');
         const storedCurrentWalletAddress = sessionStorage.getItem('currentWalletAddress');
 
-        if (storedIsWalletConnected) {
+        //if (storedIsWalletConnected) {
         //if (isWalletConnected) {
             setCurrentChainId(storedCurrentChainId);
             setCurrentWalletAddress(storedCurrentWalletAddress);
-        }
+        //}
     }, [isMetaMaskInstalled, isWalletConnected, currentChainId, currentWalletAddress]);
 
     const checkMetaMask = () => {
@@ -113,6 +119,7 @@ export const MetaMaskProvider = ({ children }) => {
         const signer = await provider.getSigner();
         const contractAddress = `0x3ab588b04a50a39b192f095fef1eeef39311d98f`; // NFT contract address
         const contract = new ethers.Contract(contractAddress, KansasBlockchainABI.abi, signer);
+        console.log('Checking NFT ownership...')
         
         let balance = 0;
         try {
