@@ -1,4 +1,4 @@
-name: (main) push to external repo
+name: (master) push to external repo
 on:
   push:
     branches:
@@ -15,5 +15,5 @@ jobs:
           deploy_key: ${{ secrets.SSH_DEPLOY_KEY }}
           publish_dir: .
           external_repository: micahborg/kbf-app
-          publish_branch: main
+          publish_branch: master
           allow_empty_commit: true
