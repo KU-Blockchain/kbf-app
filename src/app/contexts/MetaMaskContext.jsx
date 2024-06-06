@@ -45,6 +45,11 @@ export const MetaMaskProvider = ({ children }) => {
             window.ethereum.on("accountsChanged", (accounts) => {
                 console.log('Accounts changed to:', accounts);
                 setWalletConnected(accounts.length > 0);
+                if (isWalletConnected) {
+                    const walletAddress = accounts[0];
+                    setCurrentWalletAddress(walletAddress);
+                    sessionStorage.setItem('currentWalletAddress', walletAddress);
+                }
                 sessionStorage.setItem('iswalletConnected', accounts.length > 0);
                 //window.location.reload();
             });
