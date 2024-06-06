@@ -20,11 +20,9 @@ export const MetaMaskProvider = ({ children }) => {
             if (accounts.length > 0) {
                 const chainId = await window.ethereum.request({ method: 'eth_chainId' });
                 const walletAddress = accounts[0];
-                if (!isWalletConnected) {
-                    setWalletConnected(true);
-                    sessionStorage.setItem('isWalletConnected', 'true');
-                    console.log('Wallet connected with address:', walletAddress);
-                }
+                setWalletConnected(true);
+                sessionStorage.setItem('isWalletConnected', 'true');
+                console.log('Wallet connected with address:', walletAddress);
                 setCurrentWalletAddress(walletAddress);
                 setCurrentChainId(chainId);
                 sessionStorage.setItem('currentWalletAddress', walletAddress);
@@ -53,11 +51,12 @@ export const MetaMaskProvider = ({ children }) => {
                 console.log('Accounts changed to:', accounts);
                 setWalletConnected(accounts.length > 0);
                 sessionStorage.setItem('iswalletConnected', accounts.length > 0);
-                if (isWalletConnected) {
-                    const walletAddress = accounts[0];
-                    setCurrentWalletAddress(walletAddress);
-                    sessionStorage.setItem('currentWalletAddress', walletAddress);
-                }
+
+                const walletAddress = accounts[0];
+                console.log('Setting current wallet address to:', walletAddress);
+                setCurrentWalletAddress(walletAddress);
+                sessionStorage.setItem('currentWalletAddress', walletAddress);
+                
                 //window.location.reload();
             });
         }

@@ -138,7 +138,7 @@ const Portal = () => {
                         </Button>
                         </DelayedComponent>
                     )}
-                    {isWalletConnected && (
+                    {currentWalletAddress && (
                         <Box>
                             <Box mx={12} bg="blue.200" borderRadius='lg'>
                                 <Text textAlign="center" fontSize="md">Success! Your wallet (with an address of {currentWalletAddress}) is connected.</Text>
