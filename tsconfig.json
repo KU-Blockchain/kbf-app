@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/Login.jsx", "src/app/portal/page.tsx", "src/app/contexts/AuthContext.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/Login.jsx", "src/app/portal/page.jsx", "src/app/contexts/AuthContext.jsx"],
   "exclude": ["node_modules"]
 }
