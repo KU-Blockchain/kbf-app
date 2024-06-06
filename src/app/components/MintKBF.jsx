@@ -7,7 +7,7 @@ import KansasBlockchainABI from '../abi/KansasBlockchainABI.json';
 
 const MintKBF = forwardRef((props, ref) => {
   const { firstName, lastName } = useAuth();
-  const { uploadToIPFS } = useIPFS();
+  const { uploadJSONToIPFS } = useIPFS();
 
   useImperativeHandle(ref, () => ({
     handleSubmit: handleMint
@@ -21,33 +21,30 @@ const MintKBF = forwardRef((props, ref) => {
       const contract = new ethers.Contract(contractAddress, KansasBlockchainABI.abi, signer);
 
       const metadata = {
-        title: "Asset Metadata",
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-            value: `${firstName} ${lastName}'s KBF NFT`
-          },
-          description: {
-            type: "string",
-            value: "A unique NFT for the Kansas Blockchain Fellowship community"
-          },
-          image: {
-            type: "string",
-            value: "ipfs://QmRNiJHbsVKGpihD93rqfztHDTJqvXrkNUDV6YEAa5YuKd/"
-          }
+        pinataContent: {
+          name: `${firstName} ${lastName}'s KBF NFT`,
+          description: "A unique NFT for the Kansas Blockchain Fellowship community",
+          external_url: "https://kansasblockchain.org",
+          image: "ipfs://QmRNiJHbsVKGpihD93rqfztHDTJqvXrkNUDV6YEAa5YuKd"
+        },
+        pinataMetadata: {
+          name: "metadata.json"
         }
-      };
+      }
 
       console.log('NFT Metadata:', metadata);
 
-      const jsonBlob = new Blob([JSON.stringify(metadata, null, 2)], { type: 'application/json' });
-      const ipfsHash = await uploadToIPFS(jsonBlob);
+      //const jsonBlob = new Blob([JSON.stringify(metadata, null, 2)], { type: 'application/json' });
+      const ipfsHash = await uploadJSONToIPFS(metadata);
+      console.log('IPFS Hash:', ipfsHash);
+
+      //const fellowName = "Micah Borghese"
+      //const logoUri = "ipfs://QmRNiJHbsVKGpihD93rqfztHDTJqvXrkNUDV6YEAa5YuKd/"
 
       const fellow_address = await signer.getAddress();
       const tx = await contract.safeMint(
         fellow_address,
-        ipfsHash,
+        ipfsHash
       );
 
       await tx.wait();
@@ -59,9 +56,7 @@ const MintKBF = forwardRef((props, ref) => {
   }
 
   return (
-    <div>
-      <button onClick={handleMint}>Mint KBF NFT</button>
-    </div>
+    <div></div>
   );
 });
 

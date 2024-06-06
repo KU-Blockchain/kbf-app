@@ -1,5 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import KansasBlockchainABI from '../abi/KansasBlockchainABI.json';
+import { ethers } from 'ethers';
 
 const MetaMaskContext = createContext(null);
 
@@ -19,7 +21,7 @@ export const MetaMaskProvider = ({ children }) => {
                 const walletAddress = accounts[0];
                 if (!isWalletConnected) {
                     setWalletConnected(true);
-                    //sessionStorage.setItem('isWalletConnected', 'true');
+                    sessionStorage.setItem('isWalletConnected', 'true');
                     console.log('Wallet connected with address:', walletAddress);
                 }
                 setCurrentWalletAddress(walletAddress);
@@ -43,19 +45,19 @@ export const MetaMaskProvider = ({ children }) => {
             window.ethereum.on("accountsChanged", (accounts) => {
                 console.log('Accounts changed to:', accounts);
                 setWalletConnected(accounts.length > 0);
-                //sessionStorage.setItem('iswalletConnected', accounts.length > 0);
+                sessionStorage.setItem('iswalletConnected', accounts.length > 0);
                 //window.location.reload();
             });
         }
 
         // load the verification status and user details from session storage when the component mounts
-        //const storedIsWalletConnected = sessionStorage.getItem('isWalletConnected') === 'true';
+        const storedIsWalletConnected = sessionStorage.getItem('isWalletConnected') === 'true';
         //setWalletConnected(storedIsWalletConnected);
         const storedCurrentChainId = sessionStorage.getItem('currentChainId');
         const storedCurrentWalletAddress = sessionStorage.getItem('currentWalletAddress');
 
-        //if (storedIsWalletConnected) {
-        if (isWalletConnected) {
+        if (storedIsWalletConnected) {
+        //if (isWalletConnected) {
             setCurrentChainId(storedCurrentChainId);
             setCurrentWalletAddress(storedCurrentWalletAddress);
         }
@@ -101,6 +103,47 @@ export const MetaMaskProvider = ({ children }) => {
         }
     };
 
+    const checkKBFNFTOwnership = async () => {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contractAddress = `0x5CB013C15caf08EE1ef85D37e797b6f7000e6D32`; // NFT contract address
+        const contract = new ethers.Contract(contractAddress, KansasBlockchainABI.abi, signer);
+        
+        let balance = 0;
+        try {
+            balance = await contract.balanceOf(currentWalletAddress);
+            console.log('Current Balance:', balance.toString());
+        } catch (error) {
+            console.error('Error checking NFT ownership:', error);
+        }
+        return balance;
+    };
+
+    const addNFTToMetaMask = async (tokenId) => {
+        console.log('Adding NFT to MetaMask...');
+        console.log('Token ID:', tokenId);
+        try {
+            const wasAdded = await window.ethereum.request({
+                method: 'wallet_watchAsset',
+                params: {
+                    type: 'ERC721',
+                    options: {
+                        address: `0x5CB013C15caf08EE1ef85D37e797b6f7000e6D32`,
+                        tokenId: tokenId.toString(),
+                    },
+                },
+            });
+            if (wasAdded) {
+                console.log('NFT added to MetaMask');
+            } else {
+                console.log('NFT not added to MetaMask');
+            }
+        }
+        catch (error) {
+            console.error('Error adding NFT to MetaMask:', error);
+        }
+    };
+
     const checkIsOnChain = () => {
         return currentChainId === "0x13882";
     };
@@ -113,6 +156,8 @@ export const MetaMaskProvider = ({ children }) => {
             currentWalletAddress, 
             connectWallet,
             addPolygonAmoy,
+            checkKBFNFTOwnership,
+            addNFTToMetaMask,
             checkIsOnChain
          }}>
         {children}

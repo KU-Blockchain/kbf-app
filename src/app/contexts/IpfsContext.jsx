@@ -4,7 +4,7 @@ const IPFSContext = createContext();
 
 export const IPFSProvider = ({children}) =>{
 
-  async function uploadToIPFS(file) {
+  async function uploadFileToIPFS(file) {
     const formData = new FormData();
     formData.append('file', file); 
     console.log('Uploading file to IPFS...');
@@ -31,6 +31,37 @@ export const IPFSProvider = ({children}) =>{
     }
   }
 
+  async function uploadJSONToIPFS(json) {
+    const jsonString = JSON.stringify(json);
+    const jsonData = new FormData();
+    jsonData.append('file', new Blob([jsonString], { type: 'application/json' })); 
+
+    console.log('Uploading JSON to IPFS...');
+    try {
+        const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
+            },
+            body: jsonString
+        });
+
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const resData = await res.json();
+        const jsonUri = `ipfs://${resData.IpfsHash}`;
+        console.log("JSON uploaded to IPFS:", jsonUri);
+        return jsonUri;
+    } catch (error) {
+        console.error("Error uploading JSON to IPFS:", error);
+        return null;
+    }
+  }
+
+
   async function fetchFromIpfs(ipfsHash) {
       let stringData = '';
       for await (const chunk of ipfs.cat(ipfsHash)) {
@@ -47,7 +78,8 @@ export const IPFSProvider = ({children}) =>{
     return(
         <IPFSContext.Provider
             value ={{
-                uploadToIPFS,
+                uploadFileToIPFS,
+                uploadJSONToIPFS,
                 fetchFromIpfs,
             }}>
             {children}

@@ -11,11 +11,10 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // load the verification status and user details from session storage when the component mounts
-    sessionStorage.setItem('isVerified', 'true');
     const storedIsVerified = sessionStorage.getItem('isVerified') === 'true';
-    const storedFirstName = "Micah"//sessionStorage.getItem('firstName');
-    const storedLastName = "Borghese"//sessionStorage.getItem('lastName');
-    const storedEmail = "micahborghese@gmail.com"//sessionStorage.getItem('email');
+    const storedFirstName = sessionStorage.getItem('firstName');
+    const storedLastName = sessionStorage.getItem('lastName');
+    const storedEmail = sessionStorage.getItem('email');
 
     if (storedIsVerified) {
       setIsVerified(storedIsVerified);

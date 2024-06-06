@@ -6,15 +6,37 @@ import { useMetaMask } from "../contexts/MetaMaskContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import TypingEffect from "../components/TypingEffect";
 import MintKBF from "../components/MintKBF";
+import AddNFT from "../components/AddNFT";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { WarningIcon } from "@chakra-ui/icons";
+import DelayedComponent from "../components/Delay";
 
 
 const Portal = () => {
     const { firstName, lastName, email } = useAuth();
-    const { isMetaMaskInstalled, isWalletConnected, connectWallet, currentWalletAddress, addPolygonAmoy, checkIsOnChain } = useMetaMask();
+    const { isMetaMaskInstalled, isWalletConnected, connectWallet, currentWalletAddress, addPolygonAmoy, checkIsOnChain, checkKBFNFTOwnership, addNFTToMetaMask } = useMetaMask();
     const [ metaMaskChecked, setMetaMaskChecked ] = useState(false);
+    const [ hasNFT, setHasNFT] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    }
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    }
+
+    useEffect(() => {
+        const checkNFT = async () => {
+            const balance = await checkKBFNFTOwnership();
+            if (balance > 0) {
+                setHasNFT(true);
+            }
+        }
+        checkNFT();
+    }, [checkKBFNFTOwnership]);
     
     const checkMetaMask = () => {
         if (isMetaMaskInstalled) {
@@ -25,8 +47,10 @@ const Portal = () => {
     const mintKbfRef = useRef(null);
 
     const handleMint = () => {
-        if (mintKbfRef.current) {
-        mintKbfRef.current.handleSubmit();
+        if (!hasNFT) {
+            if (mintKbfRef.current) {
+                mintKbfRef.current.handleSubmit();
+            }
         }
     };
 
@@ -49,6 +73,7 @@ const Portal = () => {
                         <TypingEffect text="Firstly, let&apos;s check if you have MetaMask:" />
                     </Text>
                     {!metaMaskChecked && (
+                        <DelayedComponent delay={2000}>
                         <Popover>
                         <PopoverTrigger>
                             <Button
@@ -79,6 +104,7 @@ const Portal = () => {
                           </PopoverContent>
                         )}
                       </Popover>
+                      </DelayedComponent>
                     )}
                     {metaMaskChecked && (
                         <Box mx={12} bg="blue.200" borderRadius='lg'>
@@ -93,8 +119,45 @@ const Portal = () => {
                         <TypingEffect text="Perfect! Wallets are critical to your digital identity in the web3 world. Now that we know you have a wallet, you can go ahead and connect it here:" />
                     </Text>
                     {!isWalletConnected && (
-                    <Button
-                        onClick={handleConnectWallet}
+                        <DelayedComponent delay={8000}>
+                        <Button
+                            onClick={handleConnectWallet}
+                            colorScheme={'blue'}
+                            variant={'solid'}
+                            _hover={{
+                            bg: 'blue.300',
+                            }}
+                            mx="auto"
+                            display="block"
+                            >
+                            Connect Wallet
+                        </Button>
+                        </DelayedComponent>
+                    )}
+                    {isWalletConnected && (
+                        <Box>
+                            <Box mx={12} bg="blue.200" borderRadius='lg'>
+                                <Text textAlign="center" fontSize="md">Success! Your wallet (with an address of {currentWalletAddress}) is connected.</Text>
+                            </Box>
+                            <Text py={4} fontSize="md" textAlign="left">
+                                <TypingEffect text="For this demo, we are using the Polygon Amoy Testnet. Switching networks (or &apos;chains&apos;) is an automated process and you just need to accept the switch in the MetaMask UI." />
+                            </Text>
+                        </Box>
+                    )}
+                </Box>
+                )}
+            </Flex>
+            {isWalletConnected && (
+                <DelayedComponent delay={9000}>
+                <Box bg="blue.200" mx={10} p={4}>
+                    <Text textAlign="center" fontSize="md">
+                        Next: We&apos;re going to mint a unique NFT for you. This NFT will be stored on the Polygon Amoy Testnet and will be used to track your membership in the KBF dApp.
+                    </Text>
+                    <MintKBF ref={mintKbfRef} />
+                    <Popover>
+                    <PopoverTrigger>
+                        <Button
+                        onClick={handleMint}
                         colorScheme={'blue'}
                         variant={'solid'}
                         _hover={{
@@ -103,40 +166,39 @@ const Portal = () => {
                         mx="auto"
                         display="block"
                         >
-                        Connect Wallet
+                            1. Click Me to Mint Your KBF NFT
+                        </Button>
+                    </PopoverTrigger>
+                    {hasNFT && (
+                      <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverHeader fontSize="md"><WarningIcon /> NFT Owned</PopoverHeader>
+                        <PopoverCloseButton />
+                        <PopoverBody>
+                            <Text fontSize="md">It appears that you already own a unique KBF NFT. Please click the button below to add it to your MetaMask wallet.</Text>
+                        </PopoverBody>
+                      </PopoverContent>
+                    )}
+                    </Popover>
+                    <Text textAlign="center" fontSize="md">
+                        2. Click the button below to add your KBF NFT to your MetaMask wallet.
+                    </Text>
+                    <Button
+                        onClick={openModal}
+                        colorScheme={'blue'}
+                        variant={'solid'}
+                        _hover={{
+                        bg: 'blue.300',
+                        }}
+                        mx="auto"
+                        display="block"
+                        >
+                        3. Click Me to Add Your KBF NFT to Your Wallet
                     </Button>
-                    )}
-                    {isWalletConnected && (
-                        <Box>
-                            <Box mx={12} bg="blue.200" borderRadius='lg'>
-                                <Text textAlign="center" fontSize="md">Success! Your wallet (with an address of {currentWalletAddress}) is connected.</Text>
-                            </Box>
-                            <Text py={4} fontSize="md" textAlign="left">
-                                <TypingEffect text="For this demo, we are using the Polygon Amoy Testnet. Switching networks (or 'chains') is an automated process and you just need to accept the switch in the MetaMask UI." />
-                            </Text>
-                        </Box>
-                    )}
+                    <AddNFT isOpen={isModalOpen} onClose={closeModal} />
                 </Box>
-                )}
-            </Flex>
-            <Box bg="blue.200" mx={10} p={4}>
-                <Text textAlign="center" fontSize="md">
-                    Hi.
-                </Text>
-                <MintKBF ref={mintKbfRef} />
-                <Button
-                    onClick={handleMint}
-                    colorScheme={'blue'}
-                    variant={'solid'}
-                    _hover={{
-                    bg: 'blue.300',
-                    }}
-                    mx="auto"
-                    display="block"
-                    >
-                    Mint KBF NFT
-                </Button>
-            </Box>
+                </DelayedComponent>
+            )}
             <Footer />
         </ProtectedRoute>
     );
