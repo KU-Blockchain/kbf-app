@@ -15,7 +15,7 @@ import DelayedComponent from "../components/Delay";
 
 const Portal = () => {
     const { firstName, lastName, email } = useAuth();
-    const { isMetaMaskInstalled, isWalletConnected, connectWallet, currentWalletAddress, addPolygonAmoy, checkIsOnChain, checkKBFNFTOwnership, addNFTToMetaMask } = useMetaMask();
+    const { isMetaMaskInstalled, isWalletConnected, connectWallet, currentWalletAddress, checkIsOnChain, checkKBFNFTOwnership, addNFTToMetaMask } = useMetaMask();
     const [ metaMaskChecked, setMetaMaskChecked ] = useState(false);
     const [ hasNFT, setHasNFT] = useState(false);
     const [ isModalOpen, setIsModalOpen] = useState(false);
@@ -60,10 +60,6 @@ const Portal = () => {
 
     const handleConnectWallet = async () => {
         await connectWallet();
-        if (!checkIsOnChain()) {
-            console.log("Not on Polygon chain");
-            await addPolygonAmoy();
-        }
     };
 
     return (

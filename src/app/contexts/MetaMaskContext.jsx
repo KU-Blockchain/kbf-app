@@ -10,74 +10,59 @@ export const MetaMaskProvider = ({ children }) => {
     const [isWalletConnected, setWalletConnected] = useState(false);
     const [currentChainId, setCurrentChainId] = useState(null);
     const [currentWalletAddress, setCurrentWalletAddress] = useState(null);
-    
-    const connectWallet = async () => {
-        if (!isMetaMaskInstalled) {
-            console.log('In order to use this dApp, you need to install MetaMask')
-        } else {
-            console.log('Connecting wallet...')
-            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-            if (accounts.length > 0) {
-                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                const walletAddress = accounts[0];
-                setWalletConnected(true);
-                sessionStorage.setItem('isWalletConnected', 'true');
-                console.log('Wallet connected with address:', walletAddress);
-                setCurrentWalletAddress(walletAddress);
-                setCurrentChainId(chainId);
-                sessionStorage.setItem('currentWalletAddress', walletAddress);
-                sessionStorage.setItem('currentChainId', chainId);
-            } 
-        }
-    };
 
     useEffect(() => {
         console.log('Loading Session Variables...');
-        console.log('currentChainId:', sessionStorage.getItem('currentChainId'));
-        console.log('currentWalletAddress:', sessionStorage.getItem('currentWalletAddress'));
-        console.log('isWalletConnected:', sessionStorage.getItem('isWalletConnected'));
         console.log('isMetaMaskInstalled:', sessionStorage.getItem('isMetaMaskInstalled'));
-        console.log('isWalletConnected fr:', isWalletConnected);
+        console.log('isWalletConnected:', sessionStorage.getItem('isWalletConnected'));
+        console.log('currentWalletAddress:', sessionStorage.getItem('currentWalletAddress'));
 
-        checkMetaMask();
-        if (isMetaMaskInstalled) {
-            //const accounts = window.ethereum.request({ method: 'eth_accounts' });
-            window.ethereum.on("chainChanged", (chainId) => {
-                console.log('Chain changed to:', chainId);
-                sessionStorage.setItem('currentChainId', chainId);
-                //window.location.reload();
-            });
-            window.ethereum.on("accountsChanged", (accounts) => {
-                console.log('Accounts changed to:', accounts);
-                setWalletConnected(accounts.length > 0);
-                sessionStorage.setItem('iswalletConnected', accounts.length > 0);
+        console.log('Loading State Variables...')
+        console.log('isMetaMaskInstalled:', isMetaMaskInstalled);
+        console.log('isWalletConnected:', isWalletConnected);
+        console.log('currentWalletAddress:', currentWalletAddress);
 
+        window.ethereum.on("chainChanged", (chainId) => {
+            console.log('Chain changed to:', chainId);
+            setCurrentChainId(chainId);
+            sessionStorage.setItem('currentChainId', chainId);
+
+            //window.location.reload();
+        });
+        window.ethereum.on("accountsChanged", (accounts) => {
+            console.log('Accounts changed to:', accounts);
+            setWalletConnected(accounts.length > 0);
+            sessionStorage.setItem('iswalletConnected', accounts.length > 0);
+            
+            if (accounts.length != 0) {
                 const walletAddress = accounts[0];
                 console.log('Setting current wallet address to:', walletAddress);
                 setCurrentWalletAddress(walletAddress);
                 sessionStorage.setItem('currentWalletAddress', walletAddress);
-                
-                //window.location.reload();
-            });
-        }
+            }
+            if (accounts.length == 0) {
+                console.log('Removing current wallet address...');
+                setCurrentWalletAddress(null);
+                sessionStorage.removeItem('currentWalletAddress');
+                window.location.reload();
+            }
+        });
 
-        // load the verification status and user details from session storage when the component mounts
+        // set all session variables to state variables when the component mounts
+        sessionStorage.setItem('isMetaMaskInstalled', isMetaMaskInstalled);
         sessionStorage.setItem('isWalletConnected', isWalletConnected);
-        const storedCurrentChainId = sessionStorage.getItem('currentChainId');
-        const storedCurrentWalletAddress = sessionStorage.getItem('currentWalletAddress');
+        sessionStorage.setItem('currentChainId', currentChainId);
+        sessionStorage.setItem('currentWalletAddress', currentWalletAddress);
 
-        //if (storedIsWalletConnected) {
-        //if (isWalletConnected) {
-            setCurrentChainId(storedCurrentChainId);
-            setCurrentWalletAddress(storedCurrentWalletAddress);
-        //}
+        checkMetaMask();
+
     }, [isMetaMaskInstalled, isWalletConnected, currentChainId, currentWalletAddress]);
 
     const checkMetaMask = () => {
         if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
             console.log('MetaMask is installed');
             setIsMetaMaskInstalled(true);
-            sessionStorage.setItem('isMetaMaskInstalled', 'true');
+            //sessionStorage.setItem('isMetaMaskInstalled', 'true');
             return true;
         } else {
             console.log('MetaMask is not installed');
@@ -85,31 +70,48 @@ export const MetaMaskProvider = ({ children }) => {
         }
     };
 
-    const addPolygonAmoy = async () => {
-        try {
-            await window.ethereum.request({ method: "eth_requestAccounts" });
-        
-            await window.ethereum.request({
-                method: "wallet_addEthereumChain",
-                params: [{
-                    chainName: "Polygon Amoy Testnet", 
-                    chainId: "0x13882",
-                    nativeCurrency: {
-                        name: "MATIC", 
-                        symbol: "MATIC",
-                        decimals: 18,
-                    },
-                    rpcUrls: ["https://rpc-amoy.polygon.technology/"],
-                    blockExplorerUrls: ["https://amoy.polygonscan.com/"]
-                }],
-            });
-        
-            const chainId = await window.ethereum.request({ method: "eth_chainId" });
-            setCurrentChainId(chainId);
-            sessionStorage.setItem('currentChainId', chainId);
-            console.log('Connected to Polygon Amoy Testnet');
-        } catch (error) {
-            console.error("Failed to add the Polygon Amoy Testnet:", error);
+    const connectWallet = async () => {
+        if (!isMetaMaskInstalled) {
+            console.log('In order to use this dApp, you need to install MetaMask')
+        } else {
+            try {
+                console.log('Connecting wallet...')
+
+                const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+
+                if (accounts.length > 0) {
+                    setCurrentWalletAddress(accounts[0]);
+
+                    await window.ethereum.request({
+                        method: "wallet_addEthereumChain",
+                        params: [{
+                            chainName: "Polygon Amoy Testnet", 
+                            chainId: "0x13882",
+                            nativeCurrency: {
+                                name: "MATIC", 
+                                symbol: "MATIC",
+                                decimals: 18,
+                            },
+                            rpcUrls: ["https://rpc-amoy.polygon.technology/"],
+                            blockExplorerUrls: ["https://amoy.polygonscan.com/"]
+                        }],
+                    });
+
+                    await window.ethereum.request({
+                        "method": "wallet_switchEthereumChain",
+                        "params": [
+                          {
+                            "chainId": "0x13882"
+                          }
+                        ]
+                    });
+
+                    setWalletConnected(true);
+                    console.log('Connected to Polygon Amoy Testnet');
+                }
+            } catch (error) {
+                console.error("Failed to connect to wallet:", error);
+            }
         }
     };
 
@@ -146,12 +148,14 @@ export const MetaMaskProvider = ({ children }) => {
             });
             if (wasAdded) {
                 console.log('NFT added to MetaMask');
+                return true;
             } else {
                 console.log('NFT not added to MetaMask');
             }
         }
         catch (error) {
             console.error('Error adding NFT to MetaMask:', error);
+            return false;
         }
     };
 
@@ -166,7 +170,6 @@ export const MetaMaskProvider = ({ children }) => {
             currentChainId, 
             currentWalletAddress, 
             connectWallet,
-            addPolygonAmoy,
             checkKBFNFTOwnership,
             addNFTToMetaMask,
             checkIsOnChain

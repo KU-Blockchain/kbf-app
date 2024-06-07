@@ -30,7 +30,7 @@ export default function Home() {
   }
 
   return (
-    <Flex h="100vh" bgGradient="linear(to-r, orange.500, pink.500)">
+    <Flex h="100vh" bgGradient="linear(to-r, blue.500, green.500)">
       {!isMobile && (
       <Center w="100%">
         <Box>
