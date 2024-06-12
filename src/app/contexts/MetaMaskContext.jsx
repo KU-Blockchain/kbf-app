@@ -22,39 +22,39 @@ export const MetaMaskProvider = ({ children }) => {
         console.log('isWalletConnected:', isWalletConnected);
         console.log('currentWalletAddress:', currentWalletAddress);
 
-        window.ethereum.on("chainChanged", (chainId) => {
-            console.log('Chain changed to:', chainId);
-            setCurrentChainId(chainId);
-            sessionStorage.setItem('currentChainId', chainId);
+        if (checkMetaMask()) {
+            window.ethereum.on("chainChanged", (chainId) => {
+                console.log('Chain changed to:', chainId);
+                setCurrentChainId(chainId);
+                sessionStorage.setItem('currentChainId', chainId);
 
-            //window.location.reload();
-        });
-        window.ethereum.on("accountsChanged", (accounts) => {
-            console.log('Accounts changed to:', accounts);
-            setWalletConnected(accounts.length > 0);
-            sessionStorage.setItem('iswalletConnected', accounts.length > 0);
-            
-            if (accounts.length != 0) {
-                const walletAddress = accounts[0];
-                console.log('Setting current wallet address to:', walletAddress);
-                setCurrentWalletAddress(walletAddress);
-                sessionStorage.setItem('currentWalletAddress', walletAddress);
-            }
-            if (accounts.length == 0) {
-                console.log('Removing current wallet address...');
-                setCurrentWalletAddress(null);
-                sessionStorage.removeItem('currentWalletAddress');
-                window.location.reload();
-            }
-        });
+                //window.location.reload();
+            });
+            window.ethereum.on("accountsChanged", (accounts) => {
+                console.log('Accounts changed to:', accounts);
+                setWalletConnected(accounts.length > 0);
+                sessionStorage.setItem('iswalletConnected', accounts.length > 0);
+                
+                if (accounts.length != 0) {
+                    const walletAddress = accounts[0];
+                    console.log('Setting current wallet address to:', walletAddress);
+                    setCurrentWalletAddress(walletAddress);
+                    sessionStorage.setItem('currentWalletAddress', walletAddress);
+                }
+                if (accounts.length == 0) {
+                    console.log('Removing current wallet address...');
+                    setCurrentWalletAddress(null);
+                    sessionStorage.removeItem('currentWalletAddress');
+                    window.location.reload();
+                }
+            });
+        }
 
         // set all session variables to state variables when the component mounts
         sessionStorage.setItem('isMetaMaskInstalled', isMetaMaskInstalled);
         sessionStorage.setItem('isWalletConnected', isWalletConnected);
         sessionStorage.setItem('currentChainId', currentChainId);
         sessionStorage.setItem('currentWalletAddress', currentWalletAddress);
-
-        checkMetaMask();
 
     }, [isMetaMaskInstalled, isWalletConnected, currentChainId, currentWalletAddress]);
 
