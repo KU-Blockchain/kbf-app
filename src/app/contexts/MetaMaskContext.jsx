@@ -10,6 +10,7 @@ export const MetaMaskProvider = ({ children }) => {
     const [isWalletConnected, setWalletConnected] = useState(false);
     const [currentChainId, setCurrentChainId] = useState(null);
     const [currentWalletAddress, setCurrentWalletAddress] = useState(null);
+    //const [ hasNFT, setHasNFT] = useState(false);
 
     useEffect(() => {
         console.log('Loading Session Variables...');
@@ -57,6 +58,19 @@ export const MetaMaskProvider = ({ children }) => {
         sessionStorage.setItem('currentWalletAddress', currentWalletAddress);
 
     }, [isMetaMaskInstalled, isWalletConnected, currentChainId, currentWalletAddress]);
+
+    // useEffect(() => {
+    //     if (isWalletConnected) {
+    //         const checkNFT = async () => {
+    //             const balance = await checkKBFNFTOwnership();
+    //             if (balance > 0) {
+    //                 console.log("User has NFT")
+    //                 setHasNFT(true);
+    //             }
+    //         }
+    //         checkNFT();
+    //     }
+    // }, [isWalletConnected]);
 
     const checkMetaMask = () => {
         if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
@@ -120,15 +134,13 @@ export const MetaMaskProvider = ({ children }) => {
         const signer = await provider.getSigner();
         const contractAddress = `0x3ab588b04a50a39b192f095fef1eeef39311d98f`; // NFT contract address
         const contract = new ethers.Contract(contractAddress, KansasBlockchainABI.abi, signer);
+
+        console.log("token", contract)
         console.log('Checking NFT ownership...')
         
-        let balance = 0;
-        try {
-            balance = await contract.balanceOf(currentWalletAddress);
-            console.log('Current Balance:', balance.toString());
-        } catch (error) {
-            console.error('Error checking NFT ownership:', error);
-        }
+        const balance = await contract.balanceOf(currentWalletAddress);
+        console.log('Current Balance:', balance.toString());
+
         return balance;
     };
 

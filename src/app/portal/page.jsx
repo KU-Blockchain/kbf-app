@@ -1,12 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Button, Flex, Text, FormControl, FormLabel, Heading, Input, VStack, Card, CardHeader, CardBody, Spinner, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverCloseButton, PopoverBody, PopoverFooter } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, FormControl, FormLabel, Heading, Input, VStack, Card, CardHeader, CardBody, Spinner, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverCloseButton, PopoverBody, PopoverFooter, Fade } from "@chakra-ui/react";
 import { useAuth } from "../contexts/AuthContext";
 import { useMetaMask } from "../contexts/MetaMaskContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import TypingEffect from "../components/TypingEffect";
 import MintKBF from "../components/MintKBF";
 import AddNFT from "../components/AddNFT";
+import NeedTokens from "../components/NeedTokens";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { WarningIcon } from "@chakra-ui/icons";
@@ -17,15 +18,20 @@ const Portal = () => {
     const { firstName, lastName, email } = useAuth();
     const { isMetaMaskInstalled, isWalletConnected, connectWallet, currentWalletAddress, checkIsOnChain, checkKBFNFTOwnership, addNFTToMetaMask } = useMetaMask();
     const [ metaMaskChecked, setMetaMaskChecked ] = useState(false);
-    const [ hasNFT, setHasNFT] = useState(false);
-    const [ isModalOpen, setIsModalOpen] = useState(false);
+    const [ isNFTModalOpen, setIsNFTModalOpen] = useState(false);
+    const [ isFaucetModalOpen, setIsFaucetModalOpen] = useState(false);
+    const [ hasNFT, setHasNFT ] = useState(false);
 
-    const openModal = () => {
-        setIsModalOpen(true);
+    const openNFTModal = () => {
+        setIsNFTModalOpen(true);
     }
 
-    const closeModal = () => {
-        setIsModalOpen(false);
+    const closeNFTModal = () => {
+        setIsNFTModalOpen(false);
+    }
+
+    const closeFaucetModal = () => {
+        setIsFaucetModalOpen(false);
     }
 
     useEffect(() => {
@@ -51,7 +57,8 @@ const Portal = () => {
 
     const handleMint = () => {
         console.log("Has NFT:", hasNFT)
-        if (!hasNFT) {
+        if (hasNFT == false) {
+            setIsFaucetModalOpen(true);
             if (mintKbfRef.current) {
                 mintKbfRef.current.handleSubmit();
             }
@@ -169,6 +176,7 @@ const Portal = () => {
                             1. Click Me to Mint Your KBF NFT
                         </Button>
                     </PopoverTrigger>
+                    <NeedTokens isOpen={isFaucetModalOpen} onClose={closeFaucetModal} />
                     {hasNFT && (
                       <PopoverContent>
                         <PopoverArrow />
@@ -184,7 +192,7 @@ const Portal = () => {
                         2. Find and record the Token ID of your NFT. You&apos;ll need this for step 3.
                     </Text>
                     <Button
-                        onClick={openModal}
+                        onClick={openNFTModal}
                         colorScheme={'blue'}
                         variant={'solid'}
                         _hover={{
@@ -195,7 +203,7 @@ const Portal = () => {
                         >
                         3. Click Me to Add Your KBF NFT to Your Wallet
                     </Button>
-                    <AddNFT isOpen={isModalOpen} onClose={closeModal} />
+                    <AddNFT isOpen={isNFTModalOpen} onClose={closeNFTModal} />
                 </Box>
                 </DelayedComponent>
             )}
