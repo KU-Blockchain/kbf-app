@@ -15,7 +15,7 @@ const NeedTokens = ({ isOpen, onClose }) => {
                 <ModalBody>
                     <Stack w="100%">
                         <Text fontSize="md">If you don&apos;t have test Polygon MATIC tokens, please click the link below. You&apos;ll need to verify through Discord.</Text>
-                        <Button as="a" href="https://faucet.polygon.technology/">Go to Facuet</Button>
+                        <Button as="a" href="https://faucet.polygon.technology/" target="_blank" rel="noopener noreferrer">Go to Faucet</Button>
                     </Stack>
                 </ModalBody>
             </ModalContent>
