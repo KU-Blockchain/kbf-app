@@ -90,6 +90,9 @@ function Navbar() {
           <ChakraLink href="/quizzes" sx={linkStyle}>
             My Quizzes
           </ChakraLink>
+          <ChakraLink href="/nft_walkthrough" sx={linkStyle}>
+            KBF NFT
+          </ChakraLink>
           <ChakraLink href="https://www.kansasblockchain.org/dashboard" sx={linkStyle}>
             Dashboard
           </ChakraLink>
