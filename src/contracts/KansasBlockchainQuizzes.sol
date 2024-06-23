@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+/// @custom:security-contact micahborghese@gmail.com
 contract KansasBlockchainQuizzes is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     uint256 private _nextTokenId;
 
