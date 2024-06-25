@@ -11,8 +11,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const Quizzes = () => {
-    const { firstName, lastName, email } = useAuth();
-    const { isWalletConnected, connectWallet, currentWalletAddress, checkKBFNFTOwnership } = useMetaMask();
+    // const { firstName, lastName, email } = useAuth();
+    // const { isWalletConnected, connectWallet, currentWalletAddress, checkKBFNFTOwnership } = useMetaMask();
     const [quizTokenIDs, setQuizTokenIDs] = useState([]);
     
     useEffect(() => {
