@@ -10,7 +10,6 @@ export const MetaMaskProvider = ({ children }) => {
     const [isWalletConnected, setWalletConnected] = useState(false);
     const [currentChainId, setCurrentChainId] = useState(null);
     const [currentWalletAddress, setCurrentWalletAddress] = useState(null);
-    //const [ hasNFT, setHasNFT] = useState(false);
 
     useEffect(() => {
         console.log('Loading Session Variables...');
@@ -59,24 +58,10 @@ export const MetaMaskProvider = ({ children }) => {
 
     }, [isMetaMaskInstalled, isWalletConnected, currentChainId, currentWalletAddress]);
 
-    // useEffect(() => {
-    //     if (isWalletConnected) {
-    //         const checkNFT = async () => {
-    //             const balance = await checkKBFNFTOwnership();
-    //             if (balance > 0) {
-    //                 console.log("User has NFT")
-    //                 setHasNFT(true);
-    //             }
-    //         }
-    //         checkNFT();
-    //     }
-    // }, [isWalletConnected]);
-
     const checkMetaMask = () => {
         if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
             console.log('MetaMask is installed');
             setIsMetaMaskInstalled(true);
-            //sessionStorage.setItem('isMetaMaskInstalled', 'true');
             return true;
         } else {
             console.log('MetaMask is not installed');
