@@ -15,29 +15,29 @@ import  KansasBlockchainQuizzesABI from '../abi/KansasBlockchainQuizzesABI.json'
 import { useMetaMask } from '../contexts/MetaMaskContext';
 import { type } from 'os';
 
-// @ts-expect-error This does not exist outside of polyfill which this is doing
-if (typeof Promise.withResolvers === 'undefined') {
-    if (window)
-        // @ts-expect-error This does not exist outside of polyfill which this is doing
-        window.Promise.withResolvers = function () {
-            let resolve, reject;
-            const promise = new Promise((res, rej) => {
-                resolve = res;
-                reject = rej;
-            });
-            return { promise, resolve, reject };
-        };
-}
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
-    import.meta.url
-).toString();
-
 function Quiz({ tokenID }) {
     const [ currentQuizEncrypted, setCurrentQuizEncrypted ] = useState(null);
     const [ currentQuizDecrypted, setCurrentQuizDecrypted ] = useState(null);
     const [ isOpen, setIsOpen ] = useState(false);
+
+    // @ts-expect-error This does not exist outside of polyfill which this is doing
+    if (typeof Promise.withResolvers === 'undefined') {
+        if (window)
+            // @ts-expect-error This does not exist outside of polyfill which this is doing
+            window.Promise.withResolvers = function () {
+                let resolve, reject;
+                const promise = new Promise((res, rej) => {
+                    resolve = res;
+                    reject = rej;
+                });
+                return { promise, resolve, reject };
+            };
+    }
+
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
+        import.meta.url
+    ).toString();
 
     useEffect(() => {
         const QuizContractAddress = "0x5f4c10b5da409df81e7b8084092d49a29313165b";
