@@ -14,7 +14,7 @@ import { WarningIcon } from "@chakra-ui/icons";
 import DelayedComponent from "../components/Delay";
 
 
-const Portal = () => {
+const NFT_Walkthrough = () => {
     const { firstName, lastName, email } = useAuth();
     const { isMetaMaskInstalled, isWalletConnected, connectWallet, currentWalletAddress, checkIsOnChain, checkKBFNFTOwnership, addNFTToMetaMask } = useMetaMask();
     const [ metaMaskChecked, setMetaMaskChecked ] = useState(false);
@@ -212,4 +212,4 @@ const Portal = () => {
     );
 }
 
-export default Portal;
+export default NFT_Walkthrough;
