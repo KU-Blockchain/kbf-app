@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { Box, Button, Flex, Text, SimpleGrid, FormControl, FormLabel, Heading, Input, Stack, VStack, Card, CardHeader, CardBody, Center } from "@chakra-ui/react";
-//import Quiz from "../components/Quiz";
+import Quiz from "../components/Quiz";
 import { useAuth } from "../contexts/AuthContext";
 import { useMetaMask } from "../contexts/MetaMaskContext";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -11,8 +11,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const Quizzes = () => {
-    // const { firstName, lastName, email } = useAuth();
-    // const { isWalletConnected, connectWallet, currentWalletAddress, checkKBFNFTOwnership } = useMetaMask();
+    const { firstName, lastName, email } = useAuth();
+    const { isWalletConnected, connectWallet, currentWalletAddress, checkKBFNFTOwnership } = useMetaMask();
     const [quizTokenIDs, setQuizTokenIDs] = useState([]);
     
     useEffect(() => {
@@ -49,17 +49,17 @@ const Quizzes = () => {
                 <Text fontSize="xxxl" fontWeight="bold" mb={10}>
                     My Quizzes
                 </Text>
-                {/* {quizTokenIDs.length > 0 ? (
+                {quizTokenIDs.length > 0 ? (
                     <SimpleGrid columns={3} spacing={10}>
                         {quizTokenIDs.map((tokenID) => (
                             <Quiz key={tokenID} tokenID={tokenID} />
                         ))}
                     </SimpleGrid>
-                    ) : ( */}
+                    ) : (
                     <Text fontSize="lg" fontWeight="bold" mb={10}>
                         You have no quizzes yet!
                     </Text>
-                    {/* )} */}
+                    )}
             </Box>
             <Footer />
         </ProtectedRoute>

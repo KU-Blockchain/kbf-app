@@ -19,12 +19,12 @@ import { type } from 'os';
 //     'pdfjs-dist/build/pdf.worker.min.mjs',
 //     import.meta.url,
 //   ).toString();
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function Quiz({ tokenID }) {
     const [ currentQuizEncrypted, setCurrentQuizEncrypted ] = useState(null);
     const [ currentQuizDecrypted, setCurrentQuizDecrypted ] = useState(null);
     const [ isOpen, setIsOpen ] = useState(false);
+    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
     useEffect(() => {
         const QuizContractAddress = "0x5f4c10b5da409df81e7b8084092d49a29313165b";
