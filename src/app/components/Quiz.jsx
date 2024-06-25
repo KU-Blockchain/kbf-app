@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-//import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { ethers } from 'ethers';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, Link } from '@chakra-ui/react';
 import { Center, Box, Card, CardHeader, CardBody, CardFooter, Heading, Text, Stack, FormControl, FormLabel, Input } from '@chakra-ui/react';
@@ -19,7 +19,7 @@ import { type } from 'os';
 //     'pdfjs-dist/build/pdf.worker.min.mjs',
 //     import.meta.url,
 //   ).toString();
-//pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function Quiz({ tokenID }) {
     const [ currentQuizEncrypted, setCurrentQuizEncrypted ] = useState(null);
