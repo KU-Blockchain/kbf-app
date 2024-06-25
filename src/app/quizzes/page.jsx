@@ -19,24 +19,25 @@ const Portal = () => {
         const QuizContractAddress = "0x5f4c10b5da409df81e7b8084092d49a29313165b";
 
         const fetchQuizTokens = async () => {
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            const quizContract = new ethers.Contract(QuizContractAddress, KansasBlockchainQuizzesABI.abi, signer);
-            const userAddress = await signer.getAddress();
-            const amount = await quizContract.balanceOf(userAddress);
-            let tokens = [];
-            for (let i = 0; i < amount; i++) {
-                const tokenID = await quizContract.tokenOfOwnerByIndex(userAddress, i);
-                tokens.push(Number(tokenID));
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+                const quizContract = new ethers.Contract(QuizContractAddress, KansasBlockchainQuizzesABI.abi, signer);
+                const userAddress = await signer.getAddress();
+                const amount = await quizContract.balanceOf(userAddress);
+                let tokens = [];
+                for (let i = 0; i < amount; i++) {
+                    const tokenID = await quizContract.tokenOfOwnerByIndex(userAddress, i);
+                    tokens.push(Number(tokenID));
+                }
+                setQuizTokenIDs(tokens)
             }
-            return tokens
+            catch (error) {
+                console.error("Error catching tokens:", error);
+            }
         }
 
-        fetchQuizTokens().then(tokens => {
-            setQuizTokenIDs(tokens);
-        }).catch((error) => {
-            console.error(error);
-        });
+        fetchQuizTokens();
 
     }, []);
 
