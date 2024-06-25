@@ -34,5 +34,8 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "typescript": "^5"
-  }
+  },
+  "resolutions": {
+    "string-width": "4.2.3"
+ }
 }
