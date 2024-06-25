@@ -15,11 +15,24 @@ import  KansasBlockchainQuizzesABI from '../abi/KansasBlockchainQuizzesABI.json'
 import { useMetaMask } from '../contexts/MetaMaskContext';
 import { type } from 'os';
 
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//     'pdfjs-dist/build/pdf.worker.min.mjs',
-//     import.meta.url,
-//   ).toString();
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+// @ts-expect-error This does not exist outside of polyfill which this is doing
+if (typeof Promise.withResolvers === 'undefined') {
+    if (window)
+        // @ts-expect-error This does not exist outside of polyfill which this is doing
+        window.Promise.withResolvers = function () {
+            let resolve, reject;
+            const promise = new Promise((res, rej) => {
+                resolve = res;
+                reject = rej;
+            });
+            return { promise, resolve, reject };
+        };
+}
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
+    import.meta.url
+).toString();
 
 function Quiz({ tokenID }) {
     const [ currentQuizEncrypted, setCurrentQuizEncrypted ] = useState(null);
@@ -109,7 +122,7 @@ function Quiz({ tokenID }) {
             </CardHeader>
             <CardBody>
                 <Stack spacing={4}>
-                    {/* <Center>
+                    <Center>
                         <Document file={currentQuizDecrypted.quiz_uri}> 
                         <Page
                             pageNumber={1}
@@ -119,7 +132,7 @@ function Quiz({ tokenID }) {
                             renderMode="canvas"
                         />
                         </Document>
-                    </Center> */}
+                    </Center>
                     <Button 
                         color="black"
                         isExternal
