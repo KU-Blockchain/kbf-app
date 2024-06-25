@@ -46,11 +46,12 @@ function Quiz({ tokenID }) {
 
         fetchQuiz().then(json => {setCurrentQuizEncrypted({
                 name: json['name'],
+                quiz_number: json['quiz_number'],
                 quiz_uri: json['quiz_uri'],
                 feedback_1: json['1_feedback'],
                 feedback_2: json['2_feedback'],
                 feedback_3: json['3_feedback'],
-                external_url: json['external_url']
+                additional_comments: json['additional_comments']
             });
         });
 
@@ -73,11 +74,12 @@ function Quiz({ tokenID }) {
 
         decryptQuiz().then(data => {setCurrentQuizDecrypted({
                 name: data['name'],
+                quiz_number: data['quiz_number'],
                 quiz_uri: data['quiz_uri'].replace('ipfs://', 'https://ipfs.io/ipfs/'),
                 feedback_1: data['feedback_1'],
                 feedback_2: data['feedback_2'],
                 feedback_3: data['feedback_3'],
-                external_url: data['external_url']
+                additional_comments: data['additional_comments']
             });
         });
 
@@ -90,7 +92,7 @@ function Quiz({ tokenID }) {
             { currentQuizDecrypted && ( 
             <div>
             <CardHeader>
-                <Heading as="h1" size="1xl">{currentQuizDecrypted.name}</Heading>
+                <Heading as="h1" size="1xl">{currentQuizDecrypted.name} - Quiz {currentQuizDecrypted.quiz_number}</Heading>
             </CardHeader>
             <CardBody>
                 <Stack spacing={4}>
@@ -142,7 +144,7 @@ function Quiz({ tokenID }) {
                     <ModalHeader>
                         <Stack>
                         <Text>Feedback</Text>
-                        <Text fontSize="lg">{currentQuizDecrypted.name}</Text>
+                        <Text fontSize="lg">{currentQuizDecrypted.name} - Quiz {currentQuizDecrypted.quiz_number}</Text>
                         </Stack>
                     </ModalHeader>
                     <ModalCloseButton />
@@ -181,6 +183,18 @@ function Quiz({ tokenID }) {
                                 </AccordionButton>
                                 <AccordionPanel pb={4} fontSize="sm">
                                     <Text>{currentQuizDecrypted.feedback_3}</Text>
+                                </AccordionPanel>
+                            </AccordionItem>
+
+                            <AccordionItem>
+                                <AccordionButton>
+                                    <Box as='span' flex='1' textAlign='left' fontSize="lg">
+                                        <Text>Additional Comments</Text>
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+                                <AccordionPanel pb={4} fontSize="sm">
+                                    <Text>{currentQuizDecrypted.additional_comments}</Text>
                                 </AccordionPanel>
                             </AccordionItem>
 
