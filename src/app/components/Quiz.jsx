@@ -30,6 +30,7 @@ function Quiz({ tokenID }) {
         const QuizContractAddress = "0x5f4c10b5da409df81e7b8084092d49a29313165b";
 
         const fetchQuiz = async () => {
+            try {
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             const quizContract = new ethers.Contract(QuizContractAddress, KansasBlockchainQuizzesABI.abi, signer);
@@ -42,10 +43,7 @@ function Quiz({ tokenID }) {
             const response = await fetch(ipfsURL);
             const json = await response.json();
             
-            return json;
-        }
-
-        fetchQuiz().then(json => {setCurrentQuizEncrypted({
+            setCurrentQuizEncrypted({
                 name: json['name'],
                 quiz_number: json['quiz_number'],
                 quiz_uri: json['quiz_uri'],
@@ -54,9 +52,12 @@ function Quiz({ tokenID }) {
                 feedback_3: json['3_feedback'],
                 additional_comments: json['additional_comments']
             });
-        }).catch((error) => {
-            console.error(error);
-        });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetchQuiz();
 
     }, []);
     
@@ -77,24 +78,21 @@ function Quiz({ tokenID }) {
                     throw new Error('Bad request');
                 }
                 const data = await response.json();
-                return data;
+                setCurrentQuizDecrypted({
+                    name: data['name'],
+                    quiz_number: data['quiz_number'],
+                    quiz_uri: data['quiz_uri'].replace('ipfs://', 'https://ipfs.io/ipfs/'),
+                    feedback_1: data['feedback_1'],
+                    feedback_2: data['feedback_2'],
+                    feedback_3: data['feedback_3'],
+                    additional_comments: data['additional_comments']
+                });
             } catch (error) {
                 console.error(error);
             }
         }
 
-        decryptQuiz().then(data => {setCurrentQuizDecrypted({
-                name: data['name'],
-                quiz_number: data['quiz_number'],
-                quiz_uri: data['quiz_uri'].replace('ipfs://', 'https://ipfs.io/ipfs/'),
-                feedback_1: data['feedback_1'],
-                feedback_2: data['feedback_2'],
-                feedback_3: data['feedback_3'],
-                additional_comments: data['additional_comments']
-            });
-        }).catch((error) => {
-            console.error(error);
-        });
+        decryptQuiz();
 
     }, [currentQuizEncrypted]);
 

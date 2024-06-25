@@ -33,7 +33,7 @@ const Portal = () => {
                 setQuizTokenIDs(tokens)
             }
             catch (error) {
-                console.error("Error catching tokens:", error);
+                console.error("Error fetching tokens:", error);
             }
         }
 
