@@ -54,6 +54,8 @@ function Quiz({ tokenID }) {
                 feedback_3: json['3_feedback'],
                 additional_comments: json['additional_comments']
             });
+        }).catch((error) => {
+            console.error(error);
         });
 
     }, []);
@@ -62,15 +64,23 @@ function Quiz({ tokenID }) {
         console.log("Current Quiz Encrypted:", currentQuizEncrypted)
 
         const decryptQuiz = async () => {
-            const response = await fetch(`https://${process.env.NEXT_PUBLIC_SERVER_IP}/api/decrypt`, {
-                method: 'POST',
-                headers: {
+            try {
+                const response = await fetch(`https://${process.env.NEXT_PUBLIC_SERVER_IP}/api/decrypt`, {
+                    method: 'POST',
+                    headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(currentQuizEncrypted),
-            });
-            const data = await response.json();
-            return data;
+                    },
+                    body: JSON.stringify(currentQuizEncrypted),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Bad request');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error(error);
+            }
         }
 
         decryptQuiz().then(data => {setCurrentQuizDecrypted({
@@ -82,6 +92,8 @@ function Quiz({ tokenID }) {
                 feedback_3: data['feedback_3'],
                 additional_comments: data['additional_comments']
             });
+        }).catch((error) => {
+            console.error(error);
         });
 
     }, [currentQuizEncrypted]);

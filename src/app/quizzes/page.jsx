@@ -34,7 +34,9 @@ const Portal = () => {
 
         fetchQuizTokens().then(tokens => {
             setQuizTokenIDs(tokens);
-        })
+        }).catch((error) => {
+            console.error(error);
+        });
 
     }, []);
 
