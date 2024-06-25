@@ -10,7 +10,7 @@ import KansasBlockchainQuizzesABI from "../abi/KansasBlockchainQuizzesABI.json";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-const Portal = () => {
+const Quizzes = () => {
     const { firstName, lastName, email } = useAuth();
     const { isWalletConnected, connectWallet, currentWalletAddress, checkKBFNFTOwnership } = useMetaMask();
     const [quizTokenIDs, setQuizTokenIDs] = useState([]);
@@ -66,4 +66,4 @@ const Portal = () => {
     );
 }
 
-export default Portal;
+export default Quizzes;

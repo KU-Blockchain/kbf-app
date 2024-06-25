@@ -31,29 +31,30 @@ function Quiz({ tokenID }) {
 
         const fetchQuiz = async () => {
             try {
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            const quizContract = new ethers.Contract(QuizContractAddress, KansasBlockchainQuizzesABI.abi, signer);
-            const userAddress = await signer.getAddress();
-            console.log("Token ID:", tokenID)
-            const tokenURI = await quizContract.tokenURI(tokenID);
-            console.log("Token URI:", tokenURI);
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+                const quizContract = new ethers.Contract(QuizContractAddress, KansasBlockchainQuizzesABI.abi, signer);
+                const userAddress = await signer.getAddress();
+                console.log("Token ID:", tokenID)
+                const tokenURI = await quizContract.tokenURI(tokenID);
+                console.log("Token URI:", tokenURI);
 
-            const ipfsURL = tokenURI.replace('ipfs://', 'https://ipfs.io/ipfs/');
-            const response = await fetch(ipfsURL);
-            const json = await response.json();
-            
-            setCurrentQuizEncrypted({
-                name: json['name'],
-                quiz_number: json['quiz_number'],
-                quiz_uri: json['quiz_uri'],
-                feedback_1: json['1_feedback'],
-                feedback_2: json['2_feedback'],
-                feedback_3: json['3_feedback'],
-                additional_comments: json['additional_comments']
-            });
+                const ipfsURL = tokenURI.replace('ipfs://', 'https://ipfs.io/ipfs/');
+                const response = await fetch(ipfsURL);
+                const json = await response.json();
+                
+                setCurrentQuizEncrypted({
+                    name: json['name'],
+                    quiz_number: json['quiz_number'],
+                    quiz_uri: json['quiz_uri'],
+                    feedback_1: json['1_feedback'],
+                    feedback_2: json['2_feedback'],
+                    feedback_3: json['3_feedback'],
+                    additional_comments: json['additional_comments']
+                });
+
             } catch (error) {
-                console.error(error);
+                console.error("Error fetching quiz:", error);
             }
         }
 
@@ -78,6 +79,7 @@ function Quiz({ tokenID }) {
                     throw new Error('Bad request');
                 }
                 const data = await response.json();
+
                 setCurrentQuizDecrypted({
                     name: data['name'],
                     quiz_number: data['quiz_number'],
@@ -88,7 +90,7 @@ function Quiz({ tokenID }) {
                     additional_comments: data['additional_comments']
                 });
             } catch (error) {
-                console.error(error);
+                console.error("Error decrypting quiz:", error);
             }
         }
 
