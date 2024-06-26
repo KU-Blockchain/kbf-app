@@ -122,7 +122,7 @@ function Quiz({ tokenID }) {
                     </Center> */}
                     <Button 
                         color="black"
-                        isexternal="true"
+                        isExternal
                         as={Link}
                         href={currentQuizDecrypted.quiz_uri}
                         colorScheme="blue"
@@ -141,7 +141,7 @@ function Quiz({ tokenID }) {
                     </Button>
                     <Button 
                         color="black"
-                        isexternal="true"
+                        isExternal
                         as={Link}
                         href={`https://amoy.polygonscan.com/nft/0x5f4c10b5da409df81e7b8084092d49a29313165b/${tokenID}`}
                         variant="outline"
@@ -214,7 +214,7 @@ function Quiz({ tokenID }) {
                             </Accordion>
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" as={Link} variant="outline" mr={3} isexternal="true" onClick={() => window.open(currentQuizDecrypted.quiz_uri)}>
+                        <Button colorScheme="blue" as={Link} variant="outline" mr={3} isExternal onClick={() => window.open(currentQuizDecrypted.quiz_uri)}>
                             Open Quiz
                         </Button>
                         <Button colorScheme="blue" as={Link} variant="outline" mr={3} onClick={() => setIsOpen(false)}>
