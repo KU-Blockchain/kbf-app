@@ -53,7 +53,7 @@ function Navbar() {
     >
       <Flex align="center">
         <ChakraLink href="https://www.kansasblockchain.org/dashboard" display="flex" alignItems="center">
-          <Image src='/logo.png' boxSize="50px" pb="4px" marginRight="12px" />
+          <Image alt="KBF-Logo" src='/logo.png' boxSize="50px" pb="4px" marginRight="12px" />
           <Text fontSize="md" fontWeight="bold">
             The Kansas Blockchain Fellowship
           </Text>

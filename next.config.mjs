@@ -1,6 +1,11 @@
+import './polyfills.mjs';
 /** @type {import('next').NextConfig} */
-import 'core-js/full/promise/with-resolvers.js';
 
-const nextConfig = {};
+const nextConfig = {
+    webpack: (config) => {
+      config.resolve.alias.canvas = false;
+      return config;
+    },
+  };
 
 export default nextConfig;

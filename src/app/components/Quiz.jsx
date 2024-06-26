@@ -12,22 +12,7 @@ import {
     AccordionIcon,
   } from '@chakra-ui/react'
 import  KansasBlockchainQuizzesABI from '../abi/KansasBlockchainQuizzesABI.json';
-import { useMetaMask } from '../contexts/MetaMaskContext';
-import { type } from 'os';
-
-// @ts-expect-error This does not exist outside of polyfill which this is doing
-if (typeof Promise.withResolvers === 'undefined') {
-    if (window)
-        // @ts-expect-error This does not exist outside of polyfill which this is doing
-        window.Promise.withResolvers = function () {
-            let resolve, reject;
-            const promise = new Promise((res, rej) => {
-                resolve = res;
-                reject = rej;
-            });
-            return { promise, resolve, reject };
-        };
-}
+import '../../../polyfills.mjs';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //     'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
@@ -75,7 +60,7 @@ function Quiz({ tokenID }) {
 
         fetchQuiz();
 
-    }, []);
+    }, [tokenID]);
     
     useEffect(() => {
         console.log("Current Quiz Encrypted:", currentQuizEncrypted)

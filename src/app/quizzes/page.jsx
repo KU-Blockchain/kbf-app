@@ -9,6 +9,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import KansasBlockchainQuizzesABI from "../abi/KansasBlockchainQuizzesABI.json";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+//import '../../../polyfills.mjs';
 
 const Quizzes = () => {
     const { firstName, lastName, email } = useAuth();

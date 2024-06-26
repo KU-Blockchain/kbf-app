@@ -70,7 +70,7 @@ const Login = ({ isOpen, onClose }) => {
 
             handleVerify();
         }
-    }, [message]);
+    }, [message, router, verifyUser]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>

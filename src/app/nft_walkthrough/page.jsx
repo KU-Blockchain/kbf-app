@@ -45,7 +45,7 @@ const NFT_Walkthrough = () => {
             }
             checkNFT();
         }
-    }, [isWalletConnected]);
+    }, [isWalletConnected, checkKBFNFTOwnership]);
     
     const checkMetaMask = () => {
         if (isMetaMaskInstalled) {
