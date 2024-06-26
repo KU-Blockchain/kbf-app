@@ -12,13 +12,13 @@ import {
     AccordionIcon,
   } from '@chakra-ui/react'
 import  KansasBlockchainQuizzesABI from '../abi/KansasBlockchainQuizzesABI.json';
-import '../../../polyfills.mjs';
+//import '../../../polyfills.mjs';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //     'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
 //     import.meta.url
 // ).toString();
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+//pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 
 function Quiz({ tokenID }) {
@@ -35,9 +35,9 @@ function Quiz({ tokenID }) {
                 const signer = await provider.getSigner();
                 const quizContract = new ethers.Contract(QuizContractAddress, KansasBlockchainQuizzesABI.abi, signer);
                 const userAddress = await signer.getAddress();
-                console.log("Token ID:", tokenID)
+                //console.log("Token ID:", tokenID)
                 const tokenURI = await quizContract.tokenURI(tokenID);
-                console.log("Token URI:", tokenURI);
+                //console.log("Token URI:", tokenURI);
 
                 const ipfsURL = tokenURI.replace('ipfs://', 'https://ipfs.io/ipfs/');
                 const response = await fetch(ipfsURL);
@@ -63,8 +63,6 @@ function Quiz({ tokenID }) {
     }, [tokenID]);
     
     useEffect(() => {
-        console.log("Current Quiz Encrypted:", currentQuizEncrypted)
-
         const decryptQuiz = async () => {
             try {
                 const response = await fetch(`https://${process.env.NEXT_PUBLIC_SERVER_IP}/api/decrypt`, {
@@ -90,11 +88,13 @@ function Quiz({ tokenID }) {
                     additional_comments: data['additional_comments']
                 });
             } catch (error) {
-                console.error("Error decrypting quiz:", error);
+                //console.error("Error decrypting quiz:", error);
             }
         }
 
-        decryptQuiz();
+        if (currentQuizEncrypted) {
+            decryptQuiz();
+        }
 
     }, [currentQuizEncrypted]);
 
@@ -109,7 +109,7 @@ function Quiz({ tokenID }) {
             </CardHeader>
             <CardBody>
                 <Stack spacing={4}>
-                    <Center>
+                    {/* <Center>
                         <Document file={currentQuizDecrypted.quiz_uri}> 
                         <Page
                             pageNumber={1}
@@ -119,10 +119,10 @@ function Quiz({ tokenID }) {
                             renderMode="canvas"
                         />
                         </Document>
-                    </Center>
+                    </Center> */}
                     <Button 
                         color="black"
-                        isExternal
+                        isexternal="true"
                         as={Link}
                         href={currentQuizDecrypted.quiz_uri}
                         colorScheme="blue"
@@ -141,7 +141,7 @@ function Quiz({ tokenID }) {
                     </Button>
                     <Button 
                         color="black"
-                        isExternal
+                        isexternal="true"
                         as={Link}
                         href={`https://amoy.polygonscan.com/nft/0x5f4c10b5da409df81e7b8084092d49a29313165b/${tokenID}`}
                         variant="outline"
@@ -214,10 +214,10 @@ function Quiz({ tokenID }) {
                             </Accordion>
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} isExternal onClick={() => window.open(currentQuizDecrypted.quiz_uri)}>
+                        <Button colorScheme="blue" as={Link} variant="outline" mr={3} isexternal="true" onClick={() => window.open(currentQuizDecrypted.quiz_uri)}>
                             Open Quiz
                         </Button>
-                        <Button colorScheme="blue" mr={3} onClick={() => setIsOpen(false)}>
+                        <Button colorScheme="blue" as={Link} variant="outline" mr={3} onClick={() => setIsOpen(false)}>
                             Close
                         </Button>
                     </ModalFooter>

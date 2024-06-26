@@ -49,12 +49,13 @@ const Portal = () => {
                         <Button
                             onClick={handleConnectWallet}
                             colorScheme={'blue'}
-                            variant={'solid'}
-                            _hover={{
-                            bg: 'blue.300',
-                            }}
+                            variant={'outline'}
+                            as={Link}
+                            // _hover={{
+                            // bg: 'blue.300',
+                            // }}
                             mx="auto"
-                            display="block"
+                            
                             >
                             Connect Wallet
                         </Button>
