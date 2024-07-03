@@ -83,7 +83,7 @@ const Login = ({ isOpen, onClose }) => {
                 <ModalBody>
                     <Center w="100%">
                     {jwtChallenge ? (
-                        <QRCode size={256} value={jwtChallengeUrl} />
+                        <QRCode size={256} includeMargin='true' value={jwtChallengeUrl} />
                     ) : (
                         <Spinner
                             my={6}
